@@ -55,14 +55,19 @@ class _HealthCareContactInformationPageState
       List<StatesDropDown> listItems) {
     List<DropdownMenuItem<StatesDropDown>> items = [];
     for (StatesDropDown listItem in listItems) {
-      items.add(
-        DropdownMenuItem(
-          child: Text(listItem.stateName),
-          value: listItem,
-        ),
-      );
+      addItemsToDropDown(items, listItem);
     }
     return items;
+  }
+
+  void addItemsToDropDown(
+      List<DropdownMenuItem<StatesDropDown>> items, StatesDropDown listItem) {
+    items.add(
+      DropdownMenuItem(
+        child: Text(listItem.stateName),
+        value: listItem,
+      ),
+    );
   }
 
   @override
@@ -97,37 +102,61 @@ class _HealthCareContactInformationPageState
 
   List<Widget> buildChildren() {
     return [
-      getTextFormField(requestorFirstNameController, "Requestor First Name*",
-          "Requestor First Name",
-          validationType: 1),
-      getTextFormField(requestorLastNameController, "Requestor Last Name*",
-          "Requestor Last Name",
-          validationType: 1),
-      getDesignationWidget(),
-      getTextFormField(
-          institutionNameController, "Institute/Office*", "Institute/Office",
-          validationType: 1),
-      getTextFormField(departmentController, "Department*", "Department",
-          validationType: 1),
-      getTextFormField(
-          addressLine1Controller,
-          "Institution/Office Address Line*",
-          "Institution/Office Address Line 1",
-          validationType: 1),
-      getTextFormField(
-          addressLine2Controller,
-          "Institution/Office Address Line 2",
-          "Institution/Office Address Line 2",
-          validationType: 6),
-      getStateSelectionDropDown(),
-      getTextFormField(cityController, "City*", "City", validationType: 1),
-      getTextFormField(zipController, "Zip*", "Zip", validationType: 5),
-      getTextFormField(phoneNumberController, "Phone Number", "Phone Number",
-          validationType: 6),
-      getTextFormField(faxNumberController, "Fax Number", "Fax Number",
-          validationType: 6),
-      getTextFormField(emailController, "Email", "Email", validationType: 6),
+      getPersonalDetails(),
+      getInstitutionDetails(),
+      getAddressDetials(),
     ];
+  }
+
+  Column getPersonalDetails() {
+    return Column(
+      children: [
+        getTextFormField(requestorFirstNameController, "Requestor First Name*",
+            "Requestor First Name",
+            validationType: 1),
+        getTextFormField(requestorLastNameController, "Requestor Last Name*",
+            "Requestor Last Name",
+            validationType: 1),
+        getDesignationWidget(),
+      ],
+    );
+  }
+
+  Column getInstitutionDetails() {
+    return Column(
+      children: [
+        getTextFormField(
+            institutionNameController, "Institute/Office*", "Institute/Office",
+            validationType: 1),
+        getTextFormField(departmentController, "Department*", "Department",
+            validationType: 1),
+        getTextFormField(
+            addressLine1Controller,
+            "Institution/Office Address Line*",
+            "Institution/Office Address Line 1",
+            validationType: 1),
+        getTextFormField(
+            addressLine2Controller,
+            "Institution/Office Address Line 2",
+            "Institution/Office Address Line 2",
+            validationType: 6),
+      ],
+    );
+  }
+
+  Column getAddressDetials() {
+    return Column(
+      children: [
+        getStateSelectionDropDown(),
+        getTextFormField(cityController, "City*", "City", validationType: 1),
+        getTextFormField(zipController, "Zip*", "Zip", validationType: 5),
+        getTextFormField(phoneNumberController, "Phone Number", "Phone Number",
+            validationType: 6),
+        getTextFormField(faxNumberController, "Fax Number", "Fax Number",
+            validationType: 6),
+        getTextFormField(emailController, "Email", "Email", validationType: 6),
+      ],
+    );
   }
 
   Widget getDesignationWidget() {
@@ -170,13 +199,17 @@ class _HealthCareContactInformationPageState
   void navigateToB() {
     if (selectedState!.stateName != "State") {
       if (_formKey.currentState!.validate()) {
-        HealthCareContactInformationModel healthCareContactInformationModel =
-            getHealthCareContactDetails();
-        _bloc!.updateHealthCareValueInBloc(healthCareContactInformationModel);
-        navigateTo(this.context, UnsolicitedInformationRequestPage());
+        saveDataToBLocAndNavigate();
       }
     } else
       getSnackBar(context, "Please select State to Continue");
+  }
+
+  void saveDataToBLocAndNavigate() {
+    HealthCareContactInformationModel healthCareContactInformationModel =
+        getHealthCareContactDetails();
+    _bloc!.updateHealthCareValueInBloc(healthCareContactInformationModel);
+    navigateTo(this.context, UnsolicitedInformationRequestPage());
   }
 
   Widget getStateSelectionDropDown() {

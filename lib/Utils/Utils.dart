@@ -138,6 +138,8 @@ ThemeData buildThemeData() {
       appBarTheme: AppBarTheme(
           color: Colors.white,
           titleTextStyle: TextStyle(color: Colors.redAccent),
+          iconTheme: IconThemeData(color: Colors.redAccent),
+          foregroundColor: Colors.redAccent,
           actionsIconTheme: IconThemeData(color: Colors.black)));
 }
 
@@ -289,3 +291,15 @@ Widget getDateField(TextEditingController _controller, String labelText) {
     ),
   );
 }
+
+List<String> products = [
+  '10 MG - Roszet',
+  '20 MG - Roszet',
+];
+
+List<String> methodsOfResponse = [
+  'Fax',
+  'Mail',
+  'Email',
+  'Phone',
+];

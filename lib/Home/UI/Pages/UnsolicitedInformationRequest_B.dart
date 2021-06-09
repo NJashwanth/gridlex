@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui' as ui;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import 'package:gridlex_assessment/Home/BLOC/HomeBloc.dart';
 import 'package:gridlex_assessment/Home/Model/UnsolicitedInformationRequestModel.dart';
 import 'package:gridlex_assessment/Home/UI/Pages/RepresentiveContactInformation_C.dart';
 import 'package:gridlex_assessment/Utils/Utils.dart';
-import 'dart:ui' as ui;
 
 class UnsolicitedInformationRequestPage extends StatefulWidget {
   const UnsolicitedInformationRequestPage({Key? key}) : super(key: key);
@@ -27,18 +27,6 @@ class _UnsolicitedInformationRequestPageState
   TextEditingController dobController = new TextEditingController();
   TextEditingController dateOfRequestController = new TextEditingController();
   final _sign = GlobalKey<SignatureState>();
-
-  List<String> products = [
-    '10 MG - Roszet',
-    '20 MG - Roszet',
-  ];
-
-  List<String> methodsOfResponse = [
-    'Fax',
-    'Mail',
-    'Email',
-    'Phone',
-  ];
 
   @override
   void dispose() {
@@ -70,17 +58,21 @@ class _UnsolicitedInformationRequestPageState
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             getMainHeadingText("B.Unsolicited Information request :"),
-            Form(
-                key: _formKey,
-                child: Column(
-                  children: buildChildren(),
-                )),
+            buildForm(),
             getSignaturePad(),
             getSubmitButton(navigateToC),
           ],
         ),
       ),
     );
+  }
+
+  Form buildForm() {
+    return Form(
+        key: _formKey,
+        child: Column(
+          children: buildChildren(),
+        ));
   }
 
   List<Widget> buildChildren() {
@@ -129,20 +121,27 @@ class _UnsolicitedInformationRequestPageState
         builder: (context, snapshot) {
           return Padding(
             padding: const EdgeInsets.all(2.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Checkbox(
-                  onChanged: (value) {
-                    onProductCheckBoxChanges(snapshot, value!, product);
-                  },
-                  value: snapshot.data!.contains(product),
-                ),
-                Text(product)
-              ],
-            ),
+            child: buildRowForProductCheckBox(snapshot, product),
           );
         });
+  }
+
+  Row buildRowForProductCheckBox(
+      AsyncSnapshot<List<String>?> snapshot, String product) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [buildCheckbox(snapshot, product), Text(product)],
+    );
+  }
+
+  Checkbox buildCheckbox(
+      AsyncSnapshot<List<String>?> snapshot, String product) {
+    return Checkbox(
+      onChanged: (value) {
+        onProductCheckBoxChanges(snapshot, value!, product);
+      },
+      value: snapshot.data!.contains(product),
+    );
   }
 
   void onProductCheckBoxChanges(
@@ -257,21 +256,31 @@ class _UnsolicitedInformationRequestPageState
         builder: (context, snapshot) {
           return Padding(
             padding: const EdgeInsets.all(2.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Checkbox(
-                  onChanged: (value) {
-                    onResponseMethodCheckBoxChanges(snapshot, value!, product);
-                  },
-                  value: snapshot.data!.contains(product),
-                ),
-                Text(product)
-              ],
-            ),
+            child: buildRowForResponse(snapshot, product),
           );
         });
+  }
+
+  Row buildRowForResponse(
+      AsyncSnapshot<List<String>?> snapshot, String product) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        buildCheckboxForResponseMethods(snapshot, product),
+        Text(product)
+      ],
+    );
+  }
+
+  Checkbox buildCheckboxForResponseMethods(
+      AsyncSnapshot<List<String>?> snapshot, String product) {
+    return Checkbox(
+      onChanged: (value) {
+        onResponseMethodCheckBoxChanges(snapshot, value!, product);
+      },
+      value: snapshot.data!.contains(product),
+    );
   }
 
   void onResponseMethodCheckBoxChanges(

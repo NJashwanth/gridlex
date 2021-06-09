@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gridlex_assessment/Home/BLOC/HomeBloc.dart';
 import 'package:gridlex_assessment/Utils/Utils.dart';
 
 import 'Pages/HealthCareProfessionalContactInformation_A.dart';
-import 'package:connectivity/connectivity.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -37,11 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> initConnectivity() async {
     ConnectivityResult result = ConnectivityResult.none;
 
-    try {
-      result = await _connectivity.checkConnectivity();
-    } on PlatformException catch (e) {
-      print(e.toString());
-    }
+    result = await checkConnectivity(result);
     if (!mounted) {
       return Future.value(null);
     }
@@ -49,19 +45,35 @@ class _HomeScreenState extends State<HomeScreen> {
     return _updateConnectionStatus(result);
   }
 
+  Future<ConnectivityResult> checkConnectivity(
+      ConnectivityResult result) async {
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+    return result;
+  }
+
   void _updateConnectionStatus(ConnectivityResult event) {
     switch (event) {
       case ConnectivityResult.wifi:
       case ConnectivityResult.mobile:
-        getSnackBar(context, "Detected Network change");
-        getSnackBar(context, "Checking for Data in local Storage");
-        checkStatus();
+        checkDataInLocalServer();
         break;
 
       default:
         print("No connection");
         break;
     }
+  }
+
+  void checkDataInLocalServer() {
+    try {
+      getSnackBar(this.context, "Detected Network change");
+      getSnackBar(this.context, "Checking for Data in local Storage");
+      checkStatus();
+    } catch (e) {}
   }
 
   Future<void> checkStatus() async {

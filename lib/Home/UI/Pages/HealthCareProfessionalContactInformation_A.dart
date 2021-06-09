@@ -19,28 +19,19 @@ class _HealthCareContactInformationPageState
   HomeBloc? _bloc = HomeBloc.getInstance();
 
   TextEditingController requestorFirstNameController =
-      new TextEditingController(text: "First Name");
+      new TextEditingController();
   TextEditingController requestorLastNameController =
-      new TextEditingController(text: "Last Name");
-  TextEditingController institutionNameController =
-      new TextEditingController(text: "Institute Name");
-  TextEditingController departmentController =
-      new TextEditingController(text: "Department Name");
-  TextEditingController addressLine1Controller =
-      new TextEditingController(text: "Address 1");
-  TextEditingController addressLine2Controller =
-      new TextEditingController(text: "Address 2");
+      new TextEditingController();
+  TextEditingController institutionNameController = new TextEditingController();
+  TextEditingController departmentController = new TextEditingController();
+  TextEditingController addressLine1Controller = new TextEditingController();
+  TextEditingController addressLine2Controller = new TextEditingController();
 
-  TextEditingController cityController =
-      new TextEditingController(text: "City Name");
-  TextEditingController zipController =
-      new TextEditingController(text: "500560");
-  TextEditingController phoneNumberController =
-      new TextEditingController(text: "8186855985");
-  TextEditingController faxNumberController =
-      new TextEditingController(text: "Fax number");
-  TextEditingController emailController =
-      new TextEditingController(text: "Email@email.com");
+  TextEditingController cityController = new TextEditingController();
+  TextEditingController zipController = new TextEditingController();
+  TextEditingController phoneNumberController = new TextEditingController();
+  TextEditingController faxNumberController = new TextEditingController();
+  TextEditingController emailController = new TextEditingController();
   List<DropdownMenuItem<StatesDropDown>>? statesMenuList;
   StatesDropDown? selectedState;
   String designation = "MD";
@@ -100,23 +91,27 @@ class _HealthCareContactInformationPageState
   }
 
   Widget getBody() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          getMainHeadingText("A.Healthcare Professional Contact Information :"),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: buildChildren(),
-                  )),
+    return GestureDetector(
+      onTap: () => closeVirtualKeyboard(),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            getMainHeadingText(
+                "A.Healthcare Professional Contact Information :"),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: buildChildren(),
+                    )),
+              ),
             ),
-          ),
-          getSubmitButton(navigateToB)
-        ],
+            getSubmitButton(navigateToB)
+          ],
+        ),
       ),
     );
   }
@@ -172,10 +167,10 @@ class _HealthCareContactInformationPageState
         getTextFormField(cityController, "City*", "City", validationType: 1),
         getTextFormField(zipController, "Zip*", "Zip", validationType: 5),
         getTextFormField(phoneNumberController, "Phone Number", "Phone Number",
-            validationType: 6),
+            validationType: 7, length: 10),
         getTextFormField(faxNumberController, "Fax Number", "Fax Number",
-            validationType: 6),
-        getTextFormField(emailController, "Email", "Email", validationType: 6),
+            validationType: 7),
+        getTextFormField(emailController, "Email", "Email", validationType: 8),
       ],
     );
   }
@@ -301,5 +296,13 @@ class _HealthCareContactInformationPageState
         phoneNumberController.text,
         faxNumberController.text,
         emailController.text);
+  }
+
+  void closeVirtualKeyboard() {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
   }
 }

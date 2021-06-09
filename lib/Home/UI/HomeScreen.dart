@@ -68,9 +68,15 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _connectivitySubscription.cancel();
+  }
+
   void checkDataInLocalServer() {
     try {
-      getSnackBar(this.context, "Detected Network change");
+      // getSnackBar(this.context, "Detected Network change");
       getSnackBar(this.context, "Checking for Data in local Storage");
       checkStatus();
     } catch (e) {}

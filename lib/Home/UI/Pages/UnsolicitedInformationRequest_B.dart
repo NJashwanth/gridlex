@@ -21,9 +21,8 @@ class _UnsolicitedInformationRequestPageState
     extends State<UnsolicitedInformationRequestPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController requestDescriptionController =
-      new TextEditingController(text: "Request Description");
-  TextEditingController patientNameController =
-      new TextEditingController(text: "Patient Name");
+      new TextEditingController();
+  TextEditingController patientNameController = new TextEditingController();
   TextEditingController dobController = new TextEditingController();
   TextEditingController dateOfRequestController = new TextEditingController();
   final _sign = GlobalKey<SignatureState>();

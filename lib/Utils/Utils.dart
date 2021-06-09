@@ -25,7 +25,7 @@ Widget getTextFormField(
         maxLength: length,
         onEditingComplete: onEditingCompleted,
         onChanged: (s) => onChange != null ? onChange() : {},
-        validator: (s) => getValidation(validationType, s!),
+        validator: (s) => getValidation(validationType, s!, labelText),
         enabled: enable ?? true,
         autofocus: autoFocus ?? false,
         keyboardType: getKeyBoardType(validationType),
@@ -55,18 +55,20 @@ TextInputType getKeyBoardType(int validationType) {
     case 2:
     case 4:
     case 5:
+    case 7:
       return TextInputType.numberWithOptions();
     case 3:
+    case 8:
       return TextInputType.emailAddress;
     default:
       return TextInputType.text;
   }
 }
 
-String? getValidation(int validationType, String s) {
+String? getValidation(int validationType, String s, String labelText) {
   switch (validationType) {
     case 1:
-      return nameValidation(s);
+      return nameValidation(s, labelText);
 
     case 3:
       return emailValidation(s);
@@ -76,9 +78,10 @@ String? getValidation(int validationType, String s) {
     case 5:
       return pinCodeValidation(s);
     case 6:
+    case 7:
       return null;
     default:
-      return nameValidation(s);
+      return nameValidation(s, labelText);
   }
 }
 
@@ -100,8 +103,8 @@ String? phoneNumberValidation(String value) {
   return null;
 }
 
-nameValidation(String s) {
-  return s.isNotEmpty ? null : 'Enter Valid Details';
+nameValidation(String s, String labelText) {
+  return s.isNotEmpty ? null : 'Enter Valid $labelText';
 }
 
 emailValidation(String? s) {

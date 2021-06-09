@@ -17,15 +17,13 @@ class _RepresentativeContactInformationPageState
     extends State<RepresentativeContactInformationPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController representativeNameController =
-      new TextEditingController(text: "Representative Name");
+      new TextEditingController();
   TextEditingController representativeTypeController =
-      new TextEditingController(text: "Representative Type");
+      new TextEditingController();
   TextEditingController representativeTerritoryController =
-      new TextEditingController(text: "Representative Territory");
-  TextEditingController countryCodeController =
-      new TextEditingController(text: "+91");
-  TextEditingController primaryNumberController =
-      new TextEditingController(text: "8178563334");
+      new TextEditingController();
+  TextEditingController countryCodeController = new TextEditingController();
+  TextEditingController primaryNumberController = new TextEditingController();
   HomeBloc? _bloc = HomeBloc.getInstance();
 
   @override
@@ -85,10 +83,10 @@ class _RepresentativeContactInformationPageState
           "Representative Territory Number*", "Representative Territory Number",
           validationType: 1),
       getTextFormField(countryCodeController, "Country Code", "Country Code",
-          validationType: 6),
+          validationType: 7),
       getTextFormField(primaryNumberController, "Primary Telephone Number",
           "Telephone Number",
-          validationType: 6, length: 10),
+          validationType: 7, length: 10),
     ];
   }
 
@@ -142,7 +140,8 @@ class _RepresentativeContactInformationPageState
     if (mapFromServer['directory'] == "remote") {
       navigateToSuccessScreen("Data Successfully Saved to Remote Server");
     } else
-      navigateToSuccessScreen("Data Successfully Saved to Local Server");
+      navigateToSuccessScreen(
+          "Form Successfully Saved Locally. Will Upload to the server once the internet connection is back");
   }
 
   void navigateToSuccessScreen(String message) {

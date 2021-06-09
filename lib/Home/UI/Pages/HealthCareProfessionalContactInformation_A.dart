@@ -46,6 +46,9 @@ class _HealthCareContactInformationPageState
   void dispose() {
     super.dispose();
     disposeControllers();
+    designation = "MD";
+    selectedState = statesMenuList![0].value;
+
     _bloc!.disposeASectionRelatedStreamsInBloc();
   }
 

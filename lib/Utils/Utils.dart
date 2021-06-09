@@ -79,6 +79,7 @@ String? getValidation(int validationType, String s, String labelText) {
       return pinCodeValidation(s);
     case 6:
     case 7:
+    case 8:
       return null;
     default:
       return nameValidation(s, labelText);

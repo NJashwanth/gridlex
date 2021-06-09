@@ -87,7 +87,7 @@ class _UnsolicitedInformationRequestPageState
       buildProductsWidget(),
       getTextFormField(
           requestDescriptionController, "Request Description", "Description",
-          validationType: 1),
+          validationType: 6),
       getInquiryWidget(),
       getTextFormField(patientNameController, "Patient Name*", "Patient Name",
           validationType: 1),

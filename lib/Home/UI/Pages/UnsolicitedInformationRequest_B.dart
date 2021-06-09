@@ -33,7 +33,15 @@ class _UnsolicitedInformationRequestPageState
     super.dispose();
     selectedProducts = null;
     selectedResponseMethods = null;
-    _bloc = null;
+    disposeControllers();
+    _bloc!.disposeBSectionRelatedStreamsInBloc();
+  }
+
+  void disposeControllers() {
+    requestDescriptionController.dispose();
+    patientNameController.dispose();
+    dobController.dispose();
+    dateOfRequestController.dispose();
   }
 
   List<String>? selectedProducts;
@@ -360,6 +368,6 @@ class _UnsolicitedInformationRequestPageState
     var data = await image.toByteData(format: ui.ImageByteFormat.png);
     sign.clear();
     final encoded = base64.encode(data!.buffer.asUint8List());
-    _bloc!.imagebase64Data = encoded;
+    _bloc!.imageBase64Data = encoded;
   }
 }

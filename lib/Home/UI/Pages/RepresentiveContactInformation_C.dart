@@ -36,6 +36,20 @@ class _RepresentativeContactInformationPageState
     );
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    disposeControllers();
+  }
+
+  void disposeControllers() {
+    representativeNameController.dispose();
+    representativeTypeController.dispose();
+    representativeTerritoryController.dispose();
+    countryCodeController.dispose();
+    primaryNumberController.dispose();
+  }
+
   Widget getBody() {
     return Padding(
       padding: const EdgeInsets.all(8.0),

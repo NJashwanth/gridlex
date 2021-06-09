@@ -1,6 +1,5 @@
 import 'package:gridlex_assessment/Home/Model/MedicalFormModel.dart';
 import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart' as pathProvider;
 
 class LocalSource {
   static LocalSource? instance;
@@ -40,7 +39,7 @@ class LocalSource {
   }
 
   void clearData() {
-    print("Clear Data");
+    print("Clearing Data From Local Server");
     Hive.box('tempFormData').clear();
   }
 }

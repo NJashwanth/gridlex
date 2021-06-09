@@ -12,9 +12,10 @@ class HomeBloc {
   Repository? _repo = Repository.getInstance();
   static HomeBloc? _instance;
 
-  String? imagebase64Data;
+  String? imageBase64Data;
 
   File? image;
+
   static HomeBloc? getInstance() {
     if (_instance == null) _instance = new HomeBloc();
     return _instance;
@@ -94,23 +95,33 @@ class HomeBloc {
   Future<Map<String, dynamic>> updateRepresentativeValueInBloc(
       RepresentativeContactInformationModel
           representativeContactInformationModel) async {
-    _representativeContactInformationModel =
+    this._representativeContactInformationModel =
         representativeContactInformationModel;
     return await sendDataToServer();
   }
 
   Future<Map<String, dynamic>> sendDataToServer() async {
-    // String? imgUrl = await saveImageToStorage();
-
     MedicalFormModel model = MedicalFormModel(
         this._contactInformationModel!,
         this._unsolicitedInformationRequestModel!,
         this._representativeContactInformationModel!,
-        imagebase64Data ?? "NA");
+        imageBase64Data ?? "NA");
     return await _repo!.sendDataToServer(model);
   }
 
   Future<Map<String, dynamic>> checkForDataInLocalServer() async {
     return await _repo!.getDataFromServer();
+  }
+
+  void disposeASectionRelatedStreamsInBloc() {
+    _designationController.close();
+    _selectedStateController.close();
+  }
+
+  void disposeBSectionRelatedStreamsInBloc() {
+    _selectedProductListController.close();
+    _inquiryController.close();
+    _genderController.close();
+    _selectedResponseMethodsListController.close();
   }
 }

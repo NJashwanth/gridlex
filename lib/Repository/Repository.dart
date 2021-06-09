@@ -1,8 +1,8 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/services.dart';
+import 'package:gridlex_assessment/Home/Model/MedicalFormModel.dart';
 import 'package:gridlex_assessment/Repository/Source/httpSource.dart';
 import 'package:gridlex_assessment/Repository/Source/localSource.dart';
-import 'package:gridlex_assessment/Home/Model/MedicalFormModel.dart';
 import 'package:gridlex_assessment/Repository/Source/storageSource.dart';
 
 class Repository {
@@ -22,21 +22,47 @@ class Repository {
       MedicalFormModel medicalFormModel) async {
     ConnectivityResult result = ConnectivityResult.none;
     Map<String, dynamic> mapFromServer = {};
+    mapFromServer = await checkDataConnectionAndSendData(
+        result, medicalFormModel, mapFromServer);
+    return mapFromServer;
+  }
+
+  Future<Map<String, dynamic>> checkDataConnectionAndSendData(
+      ConnectivityResult result,
+      MedicalFormModel medicalFormModel,
+      Map<String, dynamic> mapFromServer) async {
     try {
       result = await _connectivity.checkConnectivity();
       print("Connectivity Result is =$result");
       print("URl before parsing in repo = ${medicalFormModel.url}");
       if (result == ConnectivityResult.none) {
-        mapFromServer = await _localSource!.addFormData(medicalFormModel);
+        mapFromServer =
+            await addDataToLocalServer(mapFromServer, medicalFormModel);
       } else {
-        String url = await _storageSource!.saveImageToStorage(medicalFormModel);
-        medicalFormModel.url = url;
-        mapFromServer = await _httpSource!.sendDataToServer(medicalFormModel);
+        mapFromServer =
+            await sendDataToRemoteServer(medicalFormModel, mapFromServer);
       }
     } on PlatformException catch (e) {
       print(e.toString());
-      mapFromServer = await _localSource!.addFormData(medicalFormModel);
+      mapFromServer =
+          await addDataToLocalServer(mapFromServer, medicalFormModel);
     }
+    return mapFromServer;
+  }
+
+  Future<Map<String, dynamic>> sendDataToRemoteServer(
+      MedicalFormModel medicalFormModel,
+      Map<String, dynamic> mapFromServer) async {
+    String url = await _storageSource!.saveImageToStorage(medicalFormModel);
+    medicalFormModel.url = url;
+    mapFromServer = await _httpSource!.sendDataToServer(medicalFormModel);
+    return mapFromServer;
+  }
+
+  Future<Map<String, dynamic>> addDataToLocalServer(
+      Map<String, dynamic> mapFromServer,
+      MedicalFormModel medicalFormModel) async {
+    mapFromServer = await _localSource!.addFormData(medicalFormModel);
     return mapFromServer;
   }
 

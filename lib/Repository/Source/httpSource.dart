@@ -16,27 +16,20 @@ class HttpSource {
     try {
       Uri uri = Uri.parse(
           "https://us-central1-assesstment-2b188.cloudfunctions.net/formDetaisl-sendSingleFormToServer");
-      var headers = {'Content-Type': 'application/json'};
+      var headers = getHeaders();
 
-      final response = await http.post(uri,
-          headers: headers, body: jsonEncode(medicalFormModel.toJson()));
-      print('response is ' + response.body);
+      final response = await makeUrlCall(uri, headers, medicalFormModel);
+      print('response for sendDataToServer ' + response.body);
       if (response.statusCode == 200) {
         return getEncodedMap(jsonDecode(response.body));
       } else {
         print('error occurred');
-        return {
-          "isSuccess": false,
-          "message": "Error occurred Please try again later"
-        };
+        return getErrorResponse();
       }
     } catch (e) {
       print("error for sendDataToServer = $e");
 
-      return {
-        "isSuccess": false,
-        "message": "Error occurred Please try again later"
-      };
+      return getErrorResponse();
     }
   }
 
@@ -45,27 +38,21 @@ class HttpSource {
     try {
       Uri uri = Uri.parse(
           "https://us-central1-assesstment-2b188.cloudfunctions.net/formDetaisl-sendMultipleDataToServer");
-      var headers = {'Content-Type': 'application/json'};
+      var headers = getHeaders();
 
       final response = await http.post(uri,
           headers: headers, body: jsonEncode(listToSendToServer));
-      print('response is ' + response.body);
+      print('response for sendTotalDataToServer ' + response.body);
       if (response.statusCode == 200) {
         return getEncodedMap(jsonDecode(response.body));
       } else {
         print('error occurred');
-        return {
-          "isSuccess": false,
-          "message": "Error occurred Please try again later"
-        };
+        return getErrorResponse();
       }
     } catch (e) {
       print("error for sendDataToServer = $e");
 
-      return {
-        "isSuccess": false,
-        "message": "Error occurred Please try again later"
-      };
+      return getErrorResponse();
     }
   }
 
@@ -75,5 +62,20 @@ class HttpSource {
       data[key.toString()] = value;
     });
     return jsonDecode(jsonEncode(data));
+  }
+
+  Future<http.Response> makeUrlCall(
+      Uri uri, Map<String, String> headers, MedicalFormModel medicalFormModel) {
+    return http.post(uri,
+        headers: headers, body: jsonEncode(medicalFormModel.toJson()));
+  }
+
+  Map<String, String> getHeaders() => {'Content-Type': 'application/json'};
+
+  Map<String, dynamic> getErrorResponse() {
+    return {
+      "isSuccess": false,
+      "message": "Error occurred Please try again later"
+    };
   }
 }

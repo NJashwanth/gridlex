@@ -51,6 +51,27 @@ class _HealthCareContactInformationPageState
     selectedState = statesMenuList![0].value;
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    disposeControllers();
+    _bloc!.disposeASectionRelatedStreamsInBloc();
+  }
+
+  void disposeControllers() {
+    requestorFirstNameController.dispose();
+    requestorLastNameController.dispose();
+    institutionNameController.dispose();
+    departmentController.dispose();
+    addressLine1Controller.dispose();
+    addressLine2Controller.dispose();
+    cityController.dispose();
+    zipController.dispose();
+    phoneNumberController.dispose();
+    faxNumberController.dispose();
+    emailController.dispose();
+  }
+
   List<DropdownMenuItem<StatesDropDown>> buildDropDownMenuItems(
       List<StatesDropDown> listItems) {
     List<DropdownMenuItem<StatesDropDown>> items = [];
@@ -104,7 +125,7 @@ class _HealthCareContactInformationPageState
     return [
       getPersonalDetails(),
       getInstitutionDetails(),
-      getAddressDetials(),
+      getAddressDetails(),
     ];
   }
 
@@ -144,7 +165,7 @@ class _HealthCareContactInformationPageState
     );
   }
 
-  Column getAddressDetials() {
+  Column getAddressDetails() {
     return Column(
       children: [
         getStateSelectionDropDown(),
